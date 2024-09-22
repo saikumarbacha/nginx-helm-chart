@@ -1,0 +1,24 @@
+{{- if and .Values.https.enabled .Values.https.generateSelfSignedCert }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "nginx-helm-chart.fullname" . }}-cert
+  labels:
+    {{- include "nginx-helm-chart.labels" . | nindent 4 }}
+spec:
+  secretName: {{ include "nginx-helm-chart.fullname" . }}-ssl
+  dnsNames:
+    - localhost
+  issuerRef:
+    name: {{ include "nginx-helm-chart.fullname" . }}-selfsigned-issuer
+    kind: Issuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "nginx-helm-chart.fullname" . }}-selfsigned-issuer
+  labels:
+    {{- include "nginx-helm-chart.labels" . | nindent 4 }}
+spec:
+  selfSigned: {}
+{{- end }}

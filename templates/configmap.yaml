@@ -1,0 +1,34 @@
+# ConfigMap for Nginx configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "nginx-helm-chart.fullname" . }}-config
+  labels:
+    {{- include "nginx-helm-chart.labels" . | nindent 4 }}
+data:
+  nginx.conf: |
+    events {
+      worker_connections 1024;
+    }
+    http {
+      server {
+        listen 80;
+        server_name localhost;
+        location / {
+          root /usr/share/nginx/html;
+          index index.html;
+        }
+      }
+      {{- if .Values.https.enabled }}
+      server {
+        listen 443 ssl;
+        server_name localhost;
+        ssl_certificate /etc/nginx/ssl/tls.crt;
+        ssl_certificate_key /etc/nginx/ssl/tls.key;
+        location / {
+          root /usr/share/nginx/html;
+          index index.html;
+        }
+      }
+      {{- end }}
+    }

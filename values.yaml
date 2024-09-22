@@ -1,0 +1,25 @@
+# Default values for the Nginx Helm chart
+
+# Number of Nginx replicas
+replicaCount: 1
+
+# Nginx image configuration
+image:
+  repository: nginx
+  tag: "1.26"
+  pullPolicy: IfNotPresent
+
+# Service configuration
+service:
+  type: NodePort
+  port: 80
+  httpsPort: 443
+
+ingress:
+  enabled: false
+
+# HTTPS configuration
+https:
+  enabled: false
+  # If true, a self-signed certificate will be generated
+  generateSelfSignedCert: true
